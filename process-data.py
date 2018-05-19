@@ -1,4 +1,12 @@
 
+## ==================
+## TO DO
+## Encoding to ascii
+## Contractions
+## POS tags
+## ==================
+
+
 # Language markers 
 # @s:spa = Spanish
 # @s:eng = English
@@ -75,7 +83,13 @@ for file_name in files:
 
 				words.append([w, 'insert-pos', lang])
 
-			data.append(words)
+			if len(words) >= 1:
+				start_lang = words[0][2]
+				end_lang = words[len(words)-1][2]
+
+				words = [['<start', 'start', start_lang]] + words + [['<end>', 'end', end_lang]]
+
+				data.append(words)
 			
 			# i = 0
 			# while i < len(pos):
@@ -88,6 +102,7 @@ for file_name in files:
 			# 	print(words)
 			# 	print(pos)
 			# 	print('!!')
+
 
 with open('data.json', 'w') as outfile:
     json.dump(data, outfile)
