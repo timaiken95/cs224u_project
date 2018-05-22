@@ -1,8 +1,7 @@
 
 ## ==================
 ## TO DO
-## POS tags
-## Contractions
+## POS tags ???
 ## Encoding to ascii
 ## Start/End token added at each period?
 ## ==================
@@ -82,17 +81,27 @@ for file_name in files:
 				w = w.lower()
 				if w == '': continue
 
-				vocabulary.add(w)
-				words.append([w, 'insert-pos', lang])
+				if w.find('n\'t') > -1:
+					w_split = w.split('n\'t')
+					words.append([w_split[0], lang])
+					words.append(['n\'t', lang])
+					vocabulary.add(w_split[0])
+					vocabulary.add('n\'t')
+				elif w.find('\'') > -1:
+					w_split = w.split('\'')
+					words.append([w_split[0], lang])
+					words.append(['\'' + w_split[1], lang])
+					vocabulary.add(w_split[0])
+					vocabulary.add('\'' + w_split[1])
+				else: 
+					words.append([w, lang])
+					vocabulary.add(w)
 
-			if len(words) >= 1:
-				start_lang = words[0][2]
-				end_lang = words[len(words)-1][2]
+			# if len(pos) != len(words): 
+			# 	print(words)
+			# 	print(pos)
+			# 	print()
 
-				words = [['<start>', 'start', start_lang]] + words + [['<end>', 'end', end_lang]]
-
-				data.append(words)
-			
 			# i = 0
 			# while i < len(pos):
 			# 	pos_split = pos[i].split('.', 1)
@@ -100,11 +109,16 @@ for file_name in files:
 			# 	else: pos_tag = pos_split[1]
 			# 	i += 1
 
-			# if len(pos) != len(words): 
-			# 	print(words)
-			# 	print(pos)
-			# 	print('!!')
+			if len(words) >= 1:
+				start_lang = words[0][1]
+				end_lang = words[len(words)-1][1]
 
+				words = [['<start>', 'start', start_lang]] + words + [['<end>', 'end', end_lang]]
+				data.append(words)
+			
+			
+print(len(vocabulary))
+print(len(data))
 # print(sorted(list(vocabulary)))
 # for v in vocabulary: print(v)
 
