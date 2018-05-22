@@ -1,11 +1,11 @@
 
 ## ==================
 ## TO DO
-## Encoding to ascii
-## Contractions
 ## POS tags
+## Contractions
+## Encoding to ascii
+## Start/End token added at each period?
 ## ==================
-
 
 # Language markers 
 # @s:spa = Spanish
@@ -21,9 +21,12 @@ from unidecode import unidecode
 
 folder = 'miami-data'
 files = os.listdir(folder)
-remove = set(['xxx', 'x', '+<', '[/]', '[//]', '[///]', '+...', '+/.', '+//.', '+"/.', '+"', '+,', '+..?', '+".', '+//?', '+/?', '+/?', '++', '+.', '+!?'])
+word_remove = set(['', '\"', "'s", '"', '-', '=', 'xxx', 'x', '+<', '/-', '[/]', '[//]', '[///]', '+...', '+/.', '+//.', '+"/.', '+"', '+,', '+..?', '+".', '+//?', '+/?', '+/?', '++', '+.', '+!?'])
+char_remove_table = dict.fromkeys(map(ord, '&!?()[]"<>.,/:*=-'), None)
 
 data = []
+
+vocabulary = set()
 
 for file_name in files:
 	if not file_name.endswith('.cha'): continue
@@ -66,14 +69,8 @@ for file_name in files:
 				w = w.strip()
 				if w.find('\x15') > -1: continue
 				if w.find('xxx') > -1: continue
-				if w.find('&') > -1: continue
-				if w in remove: continue
-				# if w.find('.') > -1: continue
-				# if w.find('?') > -1: continue
-				# if w.find('!') > -1: continue
-				w = w.replace('(', '')
-				w = w.replace(')', '')
-				w = w.lower()
+				if w.find('&=') > -1: continue
+				if w in word_remove: continue
 
 				lang = default_lang
 				if w.find('@s:') > -1:
@@ -81,13 +78,18 @@ for file_name in files:
 					w = w_split[0]
 					lang = w_split[1]
 
+				w = w.translate(char_remove_table)
+				w = w.lower()
+				if w == '': continue
+
+				vocabulary.add(w)
 				words.append([w, 'insert-pos', lang])
 
 			if len(words) >= 1:
 				start_lang = words[0][2]
 				end_lang = words[len(words)-1][2]
 
-				words = [['<start', 'start', start_lang]] + words + [['<end>', 'end', end_lang]]
+				words = [['<start>', 'start', start_lang]] + words + [['<end>', 'end', end_lang]]
 
 				data.append(words)
 			
@@ -103,6 +105,8 @@ for file_name in files:
 			# 	print(pos)
 			# 	print('!!')
 
+# print(sorted(list(vocabulary)))
+# for v in vocabulary: print(v)
 
 with open('data.json', 'w') as outfile:
     json.dump(data, outfile)
