@@ -113,7 +113,7 @@ for file_name in files:
 				start_lang = words[0][1]
 				end_lang = words[len(words)-1][1]
 
-				words = [['<start>', 'start', start_lang]] + words + [['<end>', 'end', end_lang]]
+				words = [['<start>', start_lang]] + words + [['<end>', end_lang]]
 				data.append(words)
 			
 			
