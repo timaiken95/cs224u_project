@@ -116,12 +116,11 @@ for file_name in files:
 				data.append(words)
 			
 			
-print(len(vocabulary))
-print(len(data))
+# print(len(vocabulary))
+# print(len(data))
 # print(sorted(list(vocabulary)))
-# for v in vocabulary: print(v)
 
-with open('data.json', 'w') as outfile:
+with open('miami-data.json', 'w') as outfile:
     json.dump(data, outfile)
 
 
