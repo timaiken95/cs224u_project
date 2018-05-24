@@ -36,6 +36,8 @@ shuffle(code_switched)
 shuffle(non_code_switched)
 
 train = code_switched[0:-2000] + non_code_switched
+shuffle(train)
+
 val_test = code_switched[-2000:]
 val = val_test[:1000]
 test = val_test[1000:]
