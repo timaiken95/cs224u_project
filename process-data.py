@@ -110,10 +110,9 @@ for file_name in files:
 			# 	i += 1
 
 			if len(words) >= 1:
-				start_lang = words[0][1]
-				end_lang = words[len(words)-1][1]
-
-				words = [['<start>', start_lang]] + words + [['<end>', end_lang]]
+				# start_lang = words[0][1]
+				# end_lang = words[len(words)-1][1]
+				# words = [['<start>', start_lang]] + words + [['<end>', end_lang]]
 				data.append(words)
 			
 			
