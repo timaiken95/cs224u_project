@@ -116,7 +116,7 @@ for file_name in files:
 				data.append(words)
 			
 			
-# print(len(vocabulary))
+print('Vocabulary size of the miami corpus is: ', len(vocabulary))
 # print(len(data))
 # print(sorted(list(vocabulary)))
 

@@ -35,7 +35,14 @@ for d in data:
 shuffle(code_switched)
 shuffle(non_code_switched)
 
-train = code_switched[0:-2000] + non_code_switched
+print('Number of code-switched utterances: ', len(code_switched))
+print('Number of non-code-switched utterances: ', len(non_code_switched))
+print('Total number of utterances: ', len(code_switched)+len(non_code_switched))
+# for utt in code_switched:
+# 	words = [t[0] for t in utt]
+# 	print(words)
+
+train = code_switched[0:-2000] #+ non_code_switched
 shuffle(train)
 
 val_test = code_switched[-2000:]
