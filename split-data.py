@@ -9,7 +9,8 @@ def open_json(file_name):
 
 
 miami_data = open_json('miami-data.json')
-data = miami_data ## add twitter-data.json
+twitter_data = open_json('twitter-data.json')
+data = miami_data + twitter_data
 
 
 train = []
