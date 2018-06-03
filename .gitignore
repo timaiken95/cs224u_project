@@ -1,6 +1,7 @@
 .DS_Store
 miami-data/
 env/
+stanford-nlp-models/
 
 # our files
 glove.6B.300d.txt
