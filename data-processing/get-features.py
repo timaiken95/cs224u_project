@@ -1,7 +1,13 @@
 import json
 import nltk
+
+nltk.internals.config_java(options='-xmx4G')
+
+
 from nltk.tag import StanfordPOSTagger
 from nltk.tag import StanfordNERTagger
+
+
 
 ## Useful documentation
 ## http://www.nltk.org/api/nltk.tag.html#module-nltk.tag.stanford
@@ -17,6 +23,28 @@ miami_data = open_json('miami-data.json')
 # twitter_data = open_json('twitter-lower.json')
 data = miami_data ##+ twitter_data
 
+
+code_switched = []
+# non_code_switched = []
+
+for d in data:
+	eng = False
+	spa = False
+
+	for token in d:
+		lang = token[1]
+		if lang == 'spa' or lang == 'eng&spa' or lang == 'spa+eng' or lang == 'eng+spa' or lang == 'mixed':
+			spa = True
+		if lang == 'eng'or lang == 'eng&spa' or lang == 'spa+eng' or lang == 'eng+spa'or lang == 'mixed':
+			eng = True
+
+	if eng and spa: code_switched.append(d)
+	# else: non_code_switched.append(d)
+
+
+
+print('creating taggers...')
+
 pos_path = 'stanford-nlp-models/stanford-postagger-full-2018-02-27/'
 ner_path = 'stanford-nlp-models/stanford-ner-2018-02-27/'
 spanish_core_ner_path = 'stanford-nlp-models/stanford-spanish-nlp/edu/stanford/nlp/models/ner/'
@@ -28,9 +56,12 @@ english_ner = StanfordNERTagger(ner_path + 'classifiers/english.all.3class.dists
 spanish_ner = StanfordNERTagger(spanish_core_ner_path + 'spanish.ancora.distsim.s512.crf.ser.gz', ner_path + 'stanford-ner.jar', encoding='utf8')
 
 
+## Run on smaller number of examples
+to_process = code_switched[0:500]
 featurized_data = []
 
-for d in data:
+
+for d in to_process:
 	sent = [w[0] for w in d]
 	e_pos_tags = english_pos.tag(sent)
 	s_pos_tags = spanish_pos.tag(sent)
@@ -49,7 +80,8 @@ for d in data:
 
 	featurized_data.append(featurized_d)
 
+print('done processing...')
 
-with open('miami-data-featurized.json', 'w') as outfile:
+with open('featurized-data/code-switched-miami-data-featurized-500.json', 'w') as outfile:
     json.dump(featurized_data, outfile)
 

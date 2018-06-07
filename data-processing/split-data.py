@@ -7,12 +7,9 @@ def open_json(file_name):
 	    data = json.load(f)
 	return data
 
-# miami_data = open_json('miami-data.json')
-# twitter_data = open_json('twitter-lower.json')
-# data = miami_data + twitter_data
-
-data = open_json('all-data.json')
-
+miami_data = open_json('miami-data.json')
+twitter_data = open_json('twitter-lower.json')
+data = miami_data + twitter_data
 
 train = []
 val = []
