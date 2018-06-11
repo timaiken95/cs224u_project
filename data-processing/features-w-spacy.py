@@ -5,8 +5,8 @@ print('creating taggers...')
 english_nlp = spacy.load('en')
 spanish_nlp = spacy.load('es')
 
-pos = set()
-ner = set()
+pos_tag_list = set()
+ner_tag_list = set()
 
 def open_json(file_name):
 	data = []
@@ -32,18 +32,20 @@ def get_switched(data):
 
 	return switched
 
-
 def match_pos_ner(d, doc, source):
 		pos_tup = [(w.text, w.pos_, 'None') for w in doc]
 		ner_tup = [(e.text, e.start, e.end, e.label_) for e in doc.ents]
 
-		for _ in pos_tup: print(_)
-		print ''
-		for _ in ner_tup: print(_)
-		print ''
-		for _ in d: print(_)
-		print ''
+		# for _ in pos_tup: print(_)
+		# print ''
+		# for _ in ner_tup: print(_)
+		# print ''
+		# for _ in d: print(_)
+		# print ''
 		# print('\n\n')
+
+		for _, p, _ in pos_tup: pos_tag_list.add(p)
+		for _, _, _, n in ner_tup: ner_tag_list.add(n)
 
 		## merge pos_tup and ner_tup
 		if len(ner_tup) > 0:
@@ -175,5 +177,11 @@ all_data_tagged = miami_tagged + twitter_tagged
 
 with open('featurized-data/all-data-tagged.json', 'w') as outfile:
     json.dump(all_data_tagged, outfile)
+
+with open('featurized-data/pos-tag-list.json', 'w') as outfile:
+    json.dump(list(pos_tag_list), outfile)
+
+with open('featurized-data/ner-tag-list.json', 'w') as outfile:
+    json.dump(list(ner_tag_list), outfile)
 
 print('done processing...')
