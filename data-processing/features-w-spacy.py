@@ -37,6 +37,14 @@ def match_pos_ner(d, doc, source):
 		pos_tup = [(w.text, w.pos_, 'None') for w in doc]
 		ner_tup = [(e.text, e.start, e.end, e.label_) for e in doc.ents]
 
+		for _ in pos_tup: print(_)
+		print ''
+		for _ in ner_tup: print(_)
+		print ''
+		for _ in d: print(_)
+		print ''
+		# print('\n\n')
+
 		## merge pos_tup and ner_tup
 		if len(ner_tup) > 0:
 			for _, start, end, label in ner_tup:
@@ -48,7 +56,7 @@ def match_pos_ner(d, doc, source):
 		p_i = 0
 		lang = d[0][1]
 
-		while p_i < len(pos_tup):
+		while p_i < len(pos_tup) and d_i < len(d):
 			w, p, n = pos_tup[p_i]
 			lang = d[d_i][1]
 
@@ -58,9 +66,10 @@ def match_pos_ner(d, doc, source):
 				new_d.append((w, lang, source, p, n))
 
 			else:
-				w_, p_, n_ = pos_tup[p_i + 1]
-				new_d.append((w, lang, source, p, n))
-				new_d.append((w_, lang, source, p_, n_))
+				if (p_i + 1) < len(pos_tup):
+					w_, p_, n_ = pos_tup[p_i + 1]
+					new_d.append((w, lang, source, p, n))
+					new_d.append((w_, lang, source, p_, n_))
 				d_i += 1
 				p_i += 2
 
@@ -88,19 +97,33 @@ def merge_english_spanish(eng, spa):
 	for s in spa: print(s)
 	print ''
 
-	prev_w = eng[0][0]
+	prev_w_eng = eng[0][0]
+	prev_w_spa = spa[0][0]
 	merged = []
 	
+	e_i = 0
 	s_i = 0
-	for w_eng, lang, source, p_eng, n_eng in eng:
-		if (prev_w == 'gon' and w_eng == 'na') or (prev_w == 'got' and w_eng == 'ta') or (prev_w == 'can' and w_eng == 'not'): continue
-		
+	# for w_eng, lang, source, p_eng, n_eng in eng:
+	while e_i < len(eng) and s_i < len(spa):
+
+		w_eng, lang, source, p_eng, n_eng = eng[e_i]
 		w_spa, _, _, p_spa, n_spa = spa[s_i]
 
+
+		if (prev_w_eng == 'gon' and w_eng == 'na') or (prev_w_eng == 'got' and w_eng == 'ta') or (prev_w_eng == 'can' and w_eng == 'not'): 
+			e_i += 1
+			continue
+
+		if (prev_w_spa == 'ima' and (w_eng == 'm' or w_eng == 'a')): 
+			e_i += 1
+			continue
+		
 		if w_eng == '\'' and w_spa == '\'': ## or p_spa == 'SYM' or p_eng == 'PUNCT':
+			e_i += 1
 			s_i += 1
 			continue
-		elif not w_eng == '\'' and w_spa == '\'':
+		
+		if not w_eng == '\'' and w_spa == '\'':
 			s_i += 1
 			w_spa, _, _, p_spa, n_spa = spa[s_i]
 
@@ -108,8 +131,11 @@ def merge_english_spanish(eng, spa):
 		else: w = w_eng
 		
 		merged.append((w, lang, source, p_eng, n_eng, p_spa, n_spa))
+		
 		s_i += 1
-		prev_w = w_eng
+		e_i += 1
+		prev_w_eng = w_eng
+		prev_w_spa = w_spa
 
 	for m in merged: print(m)
 	print('\n\n')

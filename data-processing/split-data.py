@@ -35,19 +35,23 @@ def tag_data_w_source(data, source):
 	return switched, non_switched
 
 
-miami_data = open_json('miami-data.json')
-twitter_data = open_json('twitter-data.json')
+# miami_data = open_json('miami-data.json')
+# twitter_data = open_json('twitter-data.json')
 
-miami_switched, miami_non_switched = tag_data_w_source(miami_data, 'miami')
-twitter_switched, twitter_non_switched = tag_data_w_source(twitter_data, 'twitter')
-
-print('Number of code-switched utterances: ', len(miami_switched) + len(twitter_switched))
-print('Number of non-code-switched utterances: ', len(miami_non_switched) + len(twitter_non_switched))
-print('Total number of utterances: ', len(miami_switched) + len(twitter_switched) + len(miami_non_switched) + len(twitter_non_switched))
+# miami_switched, miami_non_switched = tag_data_w_source(miami_data, 'miami')
+# twitter_switched, twitter_non_switched = tag_data_w_source(twitter_data, 'twitter')
 
 
-data = miami_switched + twitter_switched
+# print('Number of code-switched utterances: ', len(miami_switched) + len(twitter_switched))
+# print('Number of non-code-switched utterances: ', len(miami_non_switched) + len(twitter_non_switched))
+# print('Total number of utterances: ', len(miami_switched) + len(twitter_switched) + len(miami_non_switched) + len(twitter_non_switched))
+
+
+# data = miami_switched + twitter_switched
+
+data = open_json('featurized-data/all-data-tagged.json')
 shuffle(data)
+
 
 train = data[0:-2000]
 val_test = data[-2000:]
